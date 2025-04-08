@@ -1,6 +1,6 @@
 ﻿namespace pryApellidoConexionBD
 {
-    partial class Form1
+    partial class frmMenuPrincipal
     {
         /// <summary>
         /// Variable del diseñador necesaria.
@@ -28,13 +28,48 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.lblConexion = new System.Windows.Forms.Label();
+            this.btnPrueba = new System.Windows.Forms.Button();
+            this.SuspendLayout();
+            // 
+            // lblConexion
+            // 
+            this.lblConexion.AutoSize = true;
+            this.lblConexion.Location = new System.Drawing.Point(352, 79);
+            this.lblConexion.Name = "lblConexion";
+            this.lblConexion.Size = new System.Drawing.Size(35, 13);
+            this.lblConexion.TabIndex = 0;
+            this.lblConexion.Text = "label1";
+            // 
+            // btnPrueba
+            // 
+            this.btnPrueba.Location = new System.Drawing.Point(333, 183);
+            this.btnPrueba.Name = "btnPrueba";
+            this.btnPrueba.Size = new System.Drawing.Size(75, 23);
+            this.btnPrueba.TabIndex = 1;
+            this.btnPrueba.Text = "Probar";
+            this.btnPrueba.UseVisualStyleBackColor = true;
+            this.btnPrueba.Click += new System.EventHandler(this.btnPrueba_Click);
+            // 
+            // frmMenuPrincipal
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnPrueba);
+            this.Controls.Add(this.lblConexion);
+            this.Name = "frmMenuPrincipal";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.frmMenuPrincipal_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion
+
+        private System.Windows.Forms.Label lblConexion;
+        private System.Windows.Forms.Button btnPrueba;
     }
 }
 

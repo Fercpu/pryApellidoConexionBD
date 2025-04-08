@@ -10,11 +10,23 @@ using System.Windows.Forms;
 
 namespace pryApellidoConexionBD
 {
-    public partial class Form1 : Form
+    public partial class frmMenuPrincipal : Form
     {
-        public Form1()
+        public frmMenuPrincipal()
         {
             InitializeComponent();
+        }
+
+        private void frmMenuPrincipal_Load(object sender, EventArgs e)
+        {
+            clsConexionBD BD = new clsConexionBD();
+            BD.Main(lblConexion);
+        }
+
+        private void btnPrueba_Click(object sender, EventArgs e)
+        {
+            clsConexionBD BD = new clsConexionBD();
+            BD.BuscarProducto();
         }
     }
 }
