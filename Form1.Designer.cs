@@ -40,6 +40,7 @@
             this.lblConexion.Size = new System.Drawing.Size(35, 13);
             this.lblConexion.TabIndex = 0;
             this.lblConexion.Text = "label1";
+            
             // 
             // btnPrueba
             // 

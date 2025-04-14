@@ -28,5 +28,7 @@ namespace pryApellidoConexionBD
             clsConexionBD BD = new clsConexionBD();
             BD.BuscarProducto();
         }
+
+       
     }
 }
