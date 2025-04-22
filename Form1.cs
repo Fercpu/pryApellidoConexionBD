@@ -19,22 +19,16 @@ namespace pryApellidoConexionBD
 
         private void frmMenuPrincipal_Load(object sender, EventArgs e)
         {
-           // clsConexionBD BD = new clsConexionBD();
-            //BD.Main(lblConexion);
+            clsConexionBD BD = new clsConexionBD();
+            BD.Main(lblConexion);
         }
 
         private void btnPrueba_Click(object sender, EventArgs e)
         {
             clsConexionBD BD = new clsConexionBD();
-            //BD.BuscarProducto();
-            BD.ConectarAccess(lblConexion);
+            BD.BuscarProducto();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            frmGestionInventario Ventana = new frmGestionInventario();
-            this.Hide();
-            Ventana.ShowDialog();
-        }
+       
     }
 }
