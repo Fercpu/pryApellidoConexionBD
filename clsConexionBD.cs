@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using System.Net.NetworkInformation;
+using System.Data;
+using System.Data.OleDb;
+using System.Collections;
 
 namespace pryApellidoConexionBD
 {
     internal class clsConexionBD
     {
+      
         public void Main(Label lbl)
         {
             string connectionString = "Server=localhost;Database=Comercio;Trusted_Connection=True;";
@@ -60,6 +64,241 @@ namespace pryApellidoConexionBD
 
            
 
+        }
+       
+        public void ConectarAccess(Label lbl) 
+        {
+           
+            try
+            {
+                SqlConnection objConexion = new SqlConnection();
+                String CadenadeConexion = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+                objConexion.ConnectionString = CadenadeConexion;
+                objConexion.Open();
+                lbl.Text = "Conectado";
+                objConexion.Close();
+
+                
+            }
+            catch ( Exception ex ) //cuando hay error
+            {
+                
+                lbl.Text = ex.Message;
+                MessageBox.Show("Error al Conectar : " + ex.Message);
+            }
+        }
+        public void CargarProducto(String Nombre,String Descripcion,int Precio,int Stock,int Categoria )
+        {
+            try
+            {
+                string cadenaConexion = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+
+                using (SqlConnection conexion = new SqlConnection(cadenaConexion))
+                {
+                    string query = "INSERT INTO Productos (Nombre, Descripcion, Precio, Stock, CategoriaId) " +
+                                   "VALUES (@Nombre, @Descripcion, @Precio, @Stock, @Categoria)";
+
+                    using (SqlCommand comando = new SqlCommand(query, conexion))
+                    {
+                        // Asignar los valores a los parámetros
+                        comando.Parameters.AddWithValue("@Nombre", Nombre);
+                        comando.Parameters.AddWithValue("@Descripcion", Descripcion);
+                        comando.Parameters.AddWithValue("@Precio", Precio);
+                        comando.Parameters.AddWithValue("@Stock", Stock);
+                        comando.Parameters.AddWithValue("@Categoria", Categoria);
+
+                        conexion.Open();
+                        comando.ExecuteNonQuery();
+                        conexion.Close();
+
+                        MessageBox.Show("Producto cargado correctamente en SQL Server.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al insertar: " + ex.Message);
+            }
+
+
+
+        }
+        public void CargarCategorias(ComboBox cmbCategoria) 
+        {
+            try 
+            {
+                string cadenaConexion = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+
+                using (SqlConnection conexion = new SqlConnection(cadenaConexion))
+                {
+                    string query = "SELECT Id, Categoria FROM Categorias";
+
+                    using (SqlCommand comando = new SqlCommand(query, conexion))
+                    {
+                        SqlDataAdapter Adaptador = new SqlDataAdapter(comando);
+                        DataTable Tabla = new DataTable();
+                        Adaptador.Fill(Tabla);
+
+                        cmbCategoria.DataSource = Tabla;
+                        cmbCategoria.DisplayMember = "Categoria";
+                        cmbCategoria.ValueMember = "Id";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al Cargar: " + ex.Message);
+            }
+
+        }
+        public void Cargarcmbproducto(ComboBox cmbProductos) 
+        {
+            try
+            {
+                string cadenaConexion = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+
+                using (SqlConnection conexion = new SqlConnection(cadenaConexion))
+                {
+                    string query = "SELECT Codigo, Nombre FROM Productos";
+
+                    using (SqlCommand comando = new SqlCommand(query, conexion))
+                    {
+                        SqlDataAdapter Adaptador = new SqlDataAdapter(comando);
+                        DataTable Tabla = new DataTable();
+                        Adaptador.Fill(Tabla);
+
+                        DataRow fila = Tabla.NewRow();
+                        fila["Codigo"] = 0;
+                        fila["Nombre"] = "(Seleccione un Producto)";
+                        Tabla.Rows.InsertAt(fila,0);
+
+                        cmbProductos.DataSource = Tabla;
+                        cmbProductos.DisplayMember = "Nombre";
+                        cmbProductos.ValueMember = "Codigo";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al Cargar: " + ex.Message);
+            }
+        }
+        public void BuscarProductosporcmb(int codigo, TextBox txtDescripcion, TextBox txtPrecio, TextBox txtStock, ComboBox cmbCategoria ) 
+        {
+            try
+            {
+               
+                String connectionString = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT Descripcion,Precio,Stock,CategoriaId FROM Productos " +
+                        "WHERE Codigo = @Codigo";
+
+                    using (SqlCommand comando = new SqlCommand(query, connection))
+                    {
+                        comando.Parameters.AddWithValue("@Codigo", codigo);
+                        connection.Open();
+                        using (SqlDataReader Lector = comando.ExecuteReader()) //Funciones                                                       
+                        {
+                            if (Lector.Read())
+                            {
+                                txtDescripcion.Text = Lector["Descripcion"].ToString();
+                                txtPrecio.Text = Lector["Precio"].ToString();
+                                txtStock.Text = Lector["Stock"].ToString();
+                                cmbCategoria.SelectedValue = Convert.ToInt32(Lector["CategoriaId"]);
+                            
+                            }
+                        }
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Error al Conectar : " + ex.Message);
+            }
+        }
+        public void ModificarProductos(int codigo, string Descripcion, decimal Precio, int Stock, int Categoria)
+        {
+            try 
+            {
+                String connectionString = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "UPDATE Productos SET " +
+                        "Descripcion = @Descripcion," +
+                        "Precio = @Precio," +
+                        "Stock = @Stock," +
+                        "CategoriaId = @CategoriaId " +
+                        "WHERE Codigo = @Codigo";
+                    using (SqlCommand comando = new SqlCommand(query, connection))
+                    {
+                        // Asignar los valores a los parámetros
+                        comando.Parameters.AddWithValue("@Codigo", codigo);
+                        comando.Parameters.AddWithValue("@Descripcion", Descripcion);
+                        comando.Parameters.AddWithValue("@Precio", Precio);
+                        comando.Parameters.AddWithValue("@Stock", Stock);
+                        comando.Parameters.AddWithValue("@CategoriaId", Categoria);
+
+                        connection.Open();
+                        int FilasAfectadas = comando.ExecuteNonQuery();
+                        if (FilasAfectadas > 0)
+                        {
+                            MessageBox.Show("Producto Modificado Correctamente");
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se pudo Modificar el Producto");
+                        }
+                        connection.Close();
+
+                       
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al Conectar :" + ex.Message);
+            }
+        }
+        public void EliminarProducto(int Codigo) 
+        {
+            try
+            {
+                String connectionString = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "DELETE FROM Productos " + 
+                        "WHERE Codigo = @Codigo";
+                    using (SqlCommand comando = new SqlCommand(query, connection))
+                    {
+                        comando.Parameters.AddWithValue("@Codigo",Codigo);
+
+                        connection.Open();
+                        int FilasAfectadas = comando.ExecuteNonQuery();
+                        if (FilasAfectadas > 0)
+                        {
+                            MessageBox.Show("Producto Eliminado Correctamente");
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se pudo Eliminar el Producto");
+                        }
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al Conectar :" + ex.Message);
+            }
+        
         }
     }
 
