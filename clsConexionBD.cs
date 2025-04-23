@@ -14,7 +14,7 @@ namespace pryApellidoConexionBD
 {
     internal class clsConexionBD
     {
-      
+
         public void Main(Label lbl)
         {
             string connectionString = "Server=localhost;Database=Comercio;Trusted_Connection=True;";
@@ -35,7 +35,7 @@ namespace pryApellidoConexionBD
 
             }
         }
-        public void BuscarProducto() 
+        public void BuscarProducto()
         {
             try
             {
@@ -48,7 +48,7 @@ namespace pryApellidoConexionBD
                     SqlCommand command = new SqlCommand(query, connection);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        
+
                         while (reader.Read())
                         {
                             MessageBox.Show($"{reader["Nombre"]} ");
@@ -56,19 +56,19 @@ namespace pryApellidoConexionBD
                     }
                 }
             }
-            catch ( Exception ex ) 
+            catch (Exception ex)
             {
-            
+
                 MessageBox.Show("Error al Conectar : " + ex.Message);
             }
 
-           
+
 
         }
-       
-        public void ConectarAccess(Label lbl) 
+
+        public void ConectarAccess(Label lbl)
         {
-           
+
             try
             {
                 SqlConnection objConexion = new SqlConnection();
@@ -78,16 +78,16 @@ namespace pryApellidoConexionBD
                 lbl.Text = "Conectado";
                 objConexion.Close();
 
-                
+
             }
-            catch ( Exception ex ) //cuando hay error
+            catch (Exception ex) //cuando hay error
             {
-                
+
                 lbl.Text = ex.Message;
                 MessageBox.Show("Error al Conectar : " + ex.Message);
             }
         }
-        public void CargarProducto(String Nombre,String Descripcion,int Precio,int Stock,int Categoria )
+        public void CargarProducto(String Nombre, String Descripcion, int Precio, int Stock, int Categoria)
         {
             try
             {
@@ -123,9 +123,9 @@ namespace pryApellidoConexionBD
 
 
         }
-        public void CargarCategorias(ComboBox cmbCategoria) 
+        public void CargarCategorias(ComboBox cmbCategoria)
         {
-            try 
+            try
             {
                 string cadenaConexion = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
 
@@ -151,7 +151,7 @@ namespace pryApellidoConexionBD
             }
 
         }
-        public void Cargarcmbproducto(ComboBox cmbProductos) 
+        public void Cargarcmbproducto(ComboBox cmbProductos)
         {
             try
             {
@@ -170,7 +170,7 @@ namespace pryApellidoConexionBD
                         DataRow fila = Tabla.NewRow();
                         fila["Codigo"] = 0;
                         fila["Nombre"] = "(Seleccione un Producto)";
-                        Tabla.Rows.InsertAt(fila,0);
+                        Tabla.Rows.InsertAt(fila, 0);
 
                         cmbProductos.DataSource = Tabla;
                         cmbProductos.DisplayMember = "Nombre";
@@ -183,11 +183,11 @@ namespace pryApellidoConexionBD
                 MessageBox.Show("Error al Cargar: " + ex.Message);
             }
         }
-        public void BuscarProductosporcmb(int codigo, TextBox txtDescripcion, TextBox txtPrecio, TextBox txtStock, ComboBox cmbCategoria ) 
+        public void BuscarProductosporcmb(int codigo, TextBox txtDescripcion, TextBox txtPrecio, TextBox txtStock, ComboBox cmbCategoria)
         {
             try
             {
-               
+
                 String connectionString = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -207,7 +207,7 @@ namespace pryApellidoConexionBD
                                 txtPrecio.Text = Lector["Precio"].ToString();
                                 txtStock.Text = Lector["Stock"].ToString();
                                 cmbCategoria.SelectedValue = Convert.ToInt32(Lector["CategoriaId"]);
-                            
+
                             }
                         }
                         connection.Close();
@@ -222,7 +222,7 @@ namespace pryApellidoConexionBD
         }
         public void ModificarProductos(int codigo, string Descripcion, decimal Precio, int Stock, int Categoria)
         {
-            try 
+            try
             {
                 String connectionString = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
 
@@ -256,7 +256,7 @@ namespace pryApellidoConexionBD
                         }
                         connection.Close();
 
-                       
+
                     }
                 }
             }
@@ -265,7 +265,7 @@ namespace pryApellidoConexionBD
                 MessageBox.Show("Error al Conectar :" + ex.Message);
             }
         }
-        public void EliminarProducto(int Codigo) 
+        public void EliminarProducto(int Codigo)
         {
             try
             {
@@ -273,11 +273,11 @@ namespace pryApellidoConexionBD
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "DELETE FROM Productos " + 
+                    string query = "DELETE FROM Productos " +
                         "WHERE Codigo = @Codigo";
                     using (SqlCommand comando = new SqlCommand(query, connection))
                     {
-                        comando.Parameters.AddWithValue("@Codigo",Codigo);
+                        comando.Parameters.AddWithValue("@Codigo", Codigo);
 
                         connection.Open();
                         int FilasAfectadas = comando.ExecuteNonQuery();
@@ -298,7 +298,88 @@ namespace pryApellidoConexionBD
             {
                 MessageBox.Show("Error al Conectar :" + ex.Message);
             }
-        
+
+        }
+        public void BuscarPorNombre(string Nombre, DataGridView dgv)
+        {
+            try
+            {
+                string connectionString = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT * FROM Productos WHERE Nombre LIKE @Nombre";
+
+                    using (SqlCommand comando = new SqlCommand(query, connection))
+                    {
+                        comando.Parameters.AddWithValue("@Nombre", "%" + Nombre + "%");//Busca por Nombres Similares
+
+                        SqlDataAdapter adaptador = new SqlDataAdapter(comando);
+                        DataTable tabla = new DataTable();
+                        adaptador.Fill(tabla);
+
+                        dgv.DataSource = tabla;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar el producto: " + ex.Message);
+            }
+        }
+            public void BuscarPorCodigo(int codigo,  DataGridView dgv)
+            {
+                try
+                {
+                    string connectionString = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        string query = "SELECT * FROM Productos WHERE Codigo = @Codigo";
+
+                        using (SqlCommand comando = new SqlCommand(query, connection))
+                        {
+                            comando.Parameters.AddWithValue("@Codigo", codigo);
+
+                            SqlDataAdapter adaptador = new SqlDataAdapter(comando);
+                            DataTable tabla = new DataTable();
+                            adaptador.Fill(tabla);
+
+                            dgv.DataSource = tabla;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al buscar el producto: " + ex.Message);
+                }
+            }
+        public void BuscarPorCategoria(int CatId , DataGridView dgv) 
+        {
+            try
+            {
+                string connectionString = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT * FROM Productos WHERE CategoriaId = @CategoriaId";
+
+                    using (SqlCommand comando = new SqlCommand(query, connection))
+                    {
+                        comando.Parameters.AddWithValue("@CategoriaId", CatId);
+
+                        SqlDataAdapter adaptador = new SqlDataAdapter(comando);
+                        DataTable tabla = new DataTable();
+                        adaptador.Fill(tabla);
+
+                        dgv.DataSource = tabla;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar el producto: " + ex.Message);
+            }
         }
     }
 

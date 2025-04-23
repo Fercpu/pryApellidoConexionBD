@@ -170,6 +170,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmBuscarProductos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmBuscarProductos.Designer.cs">
+      <DependentUpon>frmBuscarProductos.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmGestionInventario.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,6 +192,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmBuscarProductos.resx">
+      <DependentUpon>frmBuscarProductos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmGestionInventario.resx">
       <DependentUpon>frmGestionInventario.cs</DependentUpon>

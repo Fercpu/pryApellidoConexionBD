@@ -36,5 +36,12 @@ namespace pryApellidoConexionBD
             this.Hide();
             Ventana.ShowDialog();
         }
+
+        private void btnBuscarProducto_Click(object sender, EventArgs e)
+        {
+            frmBuscarProductos ventana = new frmBuscarProductos();
+            this.Hide(); 
+            ventana.ShowDialog();
+        }
     }
 }

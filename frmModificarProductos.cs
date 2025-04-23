@@ -58,18 +58,23 @@ namespace pryApellidoConexionBD
 
         private void btnEliminar_Click(object sender, EventArgs e)
         {
-            int Codigo = Convert.ToInt32(cmbProducto.SelectedValue);
-            clsConexionBD kj = new clsConexionBD();
-            kj.EliminarProducto(Codigo);
-            txtDescripcion.Text = "";
-            txtPrecio.Text = "";
-            txtStock.Text = "";
-            cmbProducto.DataSource = null;
-            cmbCategorias.DataSource = null;
-            cmbCategorias.Items.Clear();
-            cmbProducto.Items.Clear();
-            kj.Cargarcmbproducto(cmbProducto);
-            kj.CargarCategorias(cmbCategorias);
+           
+            DialogResult Confirmacion = MessageBox.Show("Estas seguro que quieres eliminar este Producto ?","Confirmar Eliminacion",MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
+            if(Confirmacion == DialogResult.Yes)
+            {
+                int Codigo = Convert.ToInt32(cmbProducto.SelectedValue);
+                clsConexionBD kj = new clsConexionBD();
+                kj.EliminarProducto(Codigo);
+                txtDescripcion.Text = "";
+                txtPrecio.Text = "";
+                txtStock.Text = "";
+                cmbProducto.DataSource = null;
+                cmbCategorias.DataSource = null;
+                cmbCategorias.Items.Clear();
+                cmbProducto.Items.Clear();
+                kj.Cargarcmbproducto(cmbProducto);
+                kj.CargarCategorias(cmbCategorias);
+            }
         }
     }
 }
