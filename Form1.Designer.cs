@@ -32,6 +32,7 @@
             this.btnPrueba = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.btnBuscarProducto = new System.Windows.Forms.Button();
+            this.btnGestionStock = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblConexion
@@ -73,11 +74,22 @@
             this.btnBuscarProducto.UseVisualStyleBackColor = true;
             this.btnBuscarProducto.Click += new System.EventHandler(this.btnBuscarProducto_Click);
             // 
+            // btnGestionStock
+            // 
+            this.btnGestionStock.Location = new System.Drawing.Point(450, 321);
+            this.btnGestionStock.Name = "btnGestionStock";
+            this.btnGestionStock.Size = new System.Drawing.Size(133, 50);
+            this.btnGestionStock.TabIndex = 5;
+            this.btnGestionStock.Text = "Gestionar Stock";
+            this.btnGestionStock.UseVisualStyleBackColor = true;
+            this.btnGestionStock.Click += new System.EventHandler(this.btnGestionStock_Click);
+            // 
             // frmMenuPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnGestionStock);
             this.Controls.Add(this.btnBuscarProducto);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnPrueba);
@@ -96,6 +108,7 @@
         private System.Windows.Forms.Button btnPrueba;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnBuscarProducto;
+        private System.Windows.Forms.Button btnGestionStock;
     }
 }
 

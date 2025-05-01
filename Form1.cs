@@ -43,5 +43,12 @@ namespace pryApellidoConexionBD
             this.Hide(); 
             ventana.ShowDialog();
         }
+
+        private void btnGestionStock_Click(object sender, EventArgs e)
+        {
+            frmGestionStock df = new frmGestionStock();
+            this.Hide();
+            df.ShowDialog();
+        }
     }
 }

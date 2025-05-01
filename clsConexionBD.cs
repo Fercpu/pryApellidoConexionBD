@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
+using System.Data.SqlClient; // libreria sql la llama
 using System.Windows.Forms;
 using System.Net.NetworkInformation;
 using System.Data;
@@ -93,13 +93,13 @@ namespace pryApellidoConexionBD
             {
                 string cadenaConexion = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
 
-                using (SqlConnection conexion = new SqlConnection(cadenaConexion))
-                {
+                SqlConnection conexion = new SqlConnection(cadenaConexion);
+                
                     string query = "INSERT INTO Productos (Nombre, Descripcion, Precio, Stock, CategoriaId) " +
                                    "VALUES (@Nombre, @Descripcion, @Precio, @Stock, @Categoria)";
 
-                    using (SqlCommand comando = new SqlCommand(query, conexion))
-                    {
+                SqlCommand comando = new SqlCommand(query, conexion);
+                    
                         // Asignar los valores a los parámetros
                         comando.Parameters.AddWithValue("@Nombre", Nombre);
                         comando.Parameters.AddWithValue("@Descripcion", Descripcion);
@@ -112,8 +112,8 @@ namespace pryApellidoConexionBD
                         conexion.Close();
 
                         MessageBox.Show("Producto cargado correctamente en SQL Server.");
-                    }
-                }
+                    
+                
             }
             catch (Exception ex)
             {
@@ -308,7 +308,7 @@ namespace pryApellidoConexionBD
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT * FROM Productos WHERE Nombre LIKE @Nombre";
+                    string query = "  SELECT P.Codigo, P.Nombre, P.Descripcion, P.Precio, P.Stock, C.Categoria FROM Productos AS P\r\nINNER JOIN Categorias AS C ON P.CategoriaId = C.Id WHERE Nombre LIKE @Nombre";
 
                     using (SqlCommand comando = new SqlCommand(query, connection))
                     {
@@ -335,7 +335,7 @@ namespace pryApellidoConexionBD
 
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        string query = "SELECT * FROM Productos WHERE Codigo = @Codigo";
+                        string query = "SELECT P.Codigo, P.Nombre, P.Descripcion, P.Precio, P.Stock, C.Categoria FROM Productos AS P\r\nINNER JOIN Categorias AS C ON P.CategoriaId = C.Id WHERE Codigo = @Codigo";
 
                         using (SqlCommand comando = new SqlCommand(query, connection))
                         {
@@ -362,7 +362,7 @@ namespace pryApellidoConexionBD
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT * FROM Productos WHERE CategoriaId = @CategoriaId";
+                    string query = "SELECT P.Codigo, P.Nombre, P.Descripcion, P.Precio, P.Stock, C.Categoria FROM Productos AS P\r\nINNER JOIN Categorias AS C ON P.CategoriaId = C.Id WHERE CategoriaId = @CategoriaId";
 
                     using (SqlCommand comando = new SqlCommand(query, connection))
                     {
@@ -379,6 +379,85 @@ namespace pryApellidoConexionBD
             catch (Exception ex)
             {
                 MessageBox.Show("Error al buscar el producto: " + ex.Message);
+            }
+        }
+        public void BuscarStock(NumericUpDown nudStock, int codigo) 
+        {
+            try
+            {
+
+                String connectionString = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT Stock FROM Productos " +
+                        "WHERE Codigo = @Codigo";
+
+                    using (SqlCommand comando = new SqlCommand(query, connection))
+                    {
+                        comando.Parameters.AddWithValue("@Codigo", codigo);
+                        connection.Open();
+                        using (SqlDataReader Lector = comando.ExecuteReader()) //Funciones                                                       
+                        {
+                            if (Lector.Read())
+                            {
+
+                                nudStock.Value = Convert.ToInt32(Lector["Stock"]); 
+                               
+
+                            }
+                        }
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Error al Conectar : " + ex.Message);
+            }
+        }
+        public void ModificarStock(int Codigo , int Stock) 
+        {
+            try
+            {
+                String connectionString = "Server=localhost;Database=GestionInv;Trusted_Connection=True;";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "UPDATE Productos SET " +
+                        
+                        "Stock = @Stock " +
+                        
+                        "WHERE Codigo = @Codigo";
+                    using (SqlCommand comando = new SqlCommand(query, connection))
+                    {
+                        // Asignar los valores a los parámetros
+                        comando.Parameters.AddWithValue("@Codigo", Codigo);
+                       
+                        comando.Parameters.AddWithValue("@Stock", Stock);
+                       
+
+                        connection.Open();
+                        int FilasAfectadas = comando.ExecuteNonQuery();
+                        if (FilasAfectadas > 0)
+                        {
+                            MessageBox.Show("Producto Modificado Correctamente");
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se pudo Modificar el Producto");
+                        }
+                        connection.Close();
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al Conectar :" + ex.Message);
             }
         }
     }
